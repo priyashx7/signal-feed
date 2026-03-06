@@ -70,11 +70,6 @@
                     </button>
                 </nav>
 
-                <div class="sidebar-footer">
-                    <button id="settingsToggleBtn" class="icon-btn" title="Settings" style="font-size: 1.35rem;">
-                        <i class='bx bx-cog'></i> Settings
-                    </button>
-                </div>
             </div> <!-- End sidebar-menu -->
         </aside>
         <div class="menu-backdrop" id="menuBackdrop"></div>
@@ -135,62 +130,6 @@
         </div>
         <div class="panel-backdrop" id="panelBackdrop"></div>
 
-        <!-- Settings Overlay -->
-        <div class="settings-overlay" id="settingsOverlay">
-            <div class="settings-modal">
-                <div class="settings-header">
-                    <h2>Configuration</h2>
-                    <button class="icon-btn" id="closeSettingsBtn"
-                        style="transform: scale(2); transform-origin: center;"><i class='bx bx-x'></i></button>
-                </div>
-                <div class="settings-body">
-                    <div class="form-group">
-                        <label for="geminiKey">Gemini API Key</label>
-                        <input type="password" id="geminiKey" placeholder="AIzaSy...">
-                    </div>
-                    <div class="form-group">
-                        <label for="geminiModel">Gemini Model</label>
-                        <select id="geminiModel">
-                            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
-                            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
-                            <option value="gemini-2.0-flash">Gemini 2 Flash</option>
-                            <option value="gemini-2.0-flash-exp">Gemini 2 Flash Exp</option>
-                            <option value="gemini-2.0-flash-lite">Gemini 2 Flash Lite</option>
-                            <option value="gemini-3.0-flash">Gemini 3 Flash</option>
-                            <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite</option>
-                            <option value="gemini-3.0-pro">Gemini 3 Pro</option>
-                            <option value="gemini-3.1-pro">Gemini 3.1 Pro</option>
-                            <option value="gemma-3-1b-it">Gemma 3 1B</option>
-                            <option value="gemma-3-2b-it">Gemma 3 2B</option>
-                            <option value="gemma-3-4b-it">Gemma 3 4B</option>
-                            <option value="gemma-3-12b-it" selected>Gemma 3 12B</option>
-                            <option value="gemma-3-27b-it">Gemma 3 27B</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="notionToken">Notion API Token</label>
-                        <input type="password" id="notionToken" placeholder="secret_...">
-                    </div>
-                    <div class="form-group">
-                        <label for="notionDbIdAll">Notion DB ID (All Records)</label>
-                        <input type="text" id="notionDbIdAll" placeholder="e.g. 1a2b3c4d...">
-                    </div>
-                    <div class="form-group">
-                        <label for="notionDbIdSaved">Notion DB ID (Saved Intel)</label>
-                        <input type="text" id="notionDbIdSaved" placeholder="e.g. 9f8e7d6c...">
-                    </div>
-                    <div class="form-group">
-                        <label for="notionDbIdReports">Notion DB ID (Weekly Reports)</label>
-                        <input type="text" id="notionDbIdReports" placeholder="e.g. 5x4y3z2w...">
-                    </div>
-                    <p class="settings-hint">Warning: Keys are stored exclusively in your browser's localStorage. Do not
-                        use on shared devices.</p>
-                </div>
-                <div class="settings-footer">
-                    <button id="saveSettingsBtn" class="primary-btn">Save Settings</button>
-                </div>
-            </div>
-        </div>
 
         <!-- Delete Confirmation Modal -->
         <div class="settings-overlay" id="deleteConfirmOverlay">
@@ -215,6 +154,7 @@
     </div>
 
     <!-- Scripts -->
+    <script src="js/config.js"></script>
     <script src="js/store.js"></script>
     <script src="js/api.js"></script>
     <script src="js/components/card.js"></script>

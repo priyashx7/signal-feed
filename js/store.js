@@ -19,17 +19,13 @@ const Store = {
 
     // Config Settings
     getSettings() {
-        return this.get('settings', {
-            geminiKey: '',
-            geminiModel: 'gemma-3-12b-it',
-            notionToken: '',
-            notionDbIdAll: '',
-            notionDbIdSaved: ''
-        });
+        // Return global config defined in js/config.js instead of local storage
+        return AppConfig;
     },
 
     saveSettings(settings) {
-        this.set('settings', settings);
+        // Obsolete as settings are now hardcoded
+        console.warn('Settings are now hardcoded in config.js');
     },
 
     // Session State

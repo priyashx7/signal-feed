@@ -26,11 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         menuBackdrop: document.getElementById('menuBackdrop'),
 
         // Panels & Modals
-        settingsToggle: document.getElementById('settingsToggleBtn'),
-        settingsOverlay: document.getElementById('settingsOverlay'),
-        closeSettingsBtn: document.getElementById('closeSettingsBtn'),
-        saveSettingsBtn: document.getElementById('saveSettingsBtn'),
-
         detailPanel: document.getElementById('detailPanel'),
         detailContent: document.getElementById('detailContent'),
         closeDetailBtn: document.getElementById('closeDetailBtn'),
@@ -39,13 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
         toast: document.getElementById('toast'),
 
         // Inputs
-        geminiKey: document.getElementById('geminiKey'),
-        geminiModel: document.getElementById('geminiModel'),
-        notionToken: document.getElementById('notionToken'),
-        notionDbIdAll: document.getElementById('notionDbIdAll'),
-        notionDbIdSaved: document.getElementById('notionDbIdSaved'),
-        notionDbIdReports: document.getElementById('notionDbIdReports'),
-
         // Delete Confirm Modal
         deleteConfirmOverlay: document.getElementById('deleteConfirmOverlay'),
         cancelDeleteBtn: document.getElementById('cancelDeleteBtn'),
@@ -63,12 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function init() {
         // Load Settings
         const settings = Store.getSettings();
-        elements.geminiKey.value = settings.geminiKey || '';
-        if (settings.geminiModel) elements.geminiModel.value = settings.geminiModel;
-        elements.notionToken.value = settings.notionToken || '';
-        elements.notionDbIdAll.value = settings.notionDbIdAll || '';
-        elements.notionDbIdSaved.value = settings.notionDbIdSaved || '';
-        elements.notionDbIdReports.value = settings.notionDbIdReports || '';
 
         // Load Purpose
         let purpose = Store.getPurpose();
@@ -220,14 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fetch Logic
         elements.fetchBtn.addEventListener('click', handleFetchNews);
 
-        // Settings Modal
-        elements.settingsToggle.addEventListener('click', () => {
-            elements.settingsOverlay.classList.add('open');
-        });
-        elements.closeSettingsBtn.addEventListener('click', () => {
-            elements.settingsOverlay.classList.remove('open');
-        });
-        elements.saveSettingsBtn.addEventListener('click', handleSaveSettings);
+
 
         // Mobile Menu Config
         if (elements.mobileMenuBtn) {
@@ -360,18 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => elements.toast.classList.remove('show'), 3000);
     }
 
-    function handleSaveSettings() {
-        Store.saveSettings({
-            geminiKey: elements.geminiKey.value.trim(),
-            geminiModel: elements.geminiModel.value,
-            notionToken: elements.notionToken.value.trim(),
-            notionDbIdAll: elements.notionDbIdAll.value.trim(),
-            notionDbIdSaved: elements.notionDbIdSaved.value.trim(),
-            notionDbIdReports: elements.notionDbIdReports.value.trim()
-        });
-        elements.settingsOverlay.classList.remove('open');
-        showToast('Settings Saved Successfully');
-    }
+
 
     async function handleFetchNews() {
         const settings = Store.getSettings();
