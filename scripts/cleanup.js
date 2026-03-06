@@ -1,13 +1,12 @@
 import fs from 'fs';
 
-const NOTION_TOKEN = process.env.NOTION_TOKEN;
-const NOTION_DB_ID = process.env.NOTION_DB_ID;
-const NOTION_DB_ID_REPORTS = process.env.NOTION_DB_ID_REPORTS;
+const configContent = fs.readFileSync('./js/config.js', 'utf-8');
+let AppConfig = {};
+eval(configContent);
 
-if (!NOTION_TOKEN || !NOTION_DB_ID) {
-    console.error("Missing Notion credentials for main database.");
-    process.exit(1);
-}
+const NOTION_TOKEN = AppConfig.notionToken;
+const NOTION_DB_ID = AppConfig.notionDbIdAll;
+const NOTION_DB_ID_REPORTS = AppConfig.notionDbIdReports;
 
 async function runCleanup(dbId, daysAgo, dbName) {
     if (!dbId) {

@@ -2,17 +2,17 @@ import fs from 'fs';
 import Parser from 'rss-parser';
 
 const parser = new Parser();
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const NOTION_TOKEN = process.env.NOTION_TOKEN;
-const NOTION_DB_ID = process.env.NOTION_DB_ID;
+const configContent = fs.readFileSync('./js/config.js', 'utf-8');
+let AppConfig = {};
+eval(configContent);
 
-if (!GEMINI_API_KEY || !NOTION_TOKEN || !NOTION_DB_ID) {
-    console.error("Missing required environment variables.");
-    process.exit(1);
-}
+const GEMINI_API_KEY = AppConfig.geminiKey;
+const NOTION_TOKEN = AppConfig.notionToken;
+const NOTION_DB_ID = AppConfig.notionDbIdAll;
+const GEMINI_MODEL = AppConfig.geminiModel;
 
 async function callGemini(prompt, systemInstruction = "") {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
     const payload = {
         contents: [{ parts: [{ text: prompt }] }],
         generationConfig: { temperature: 0.3 }

@@ -1,14 +1,14 @@
 import fs from 'fs';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const NOTION_TOKEN = process.env.NOTION_TOKEN;
-const NOTION_DB_ID_ALL = process.env.NOTION_DB_ID; // The source of truth DB
-const NOTION_DB_ID_REPORTS = process.env.NOTION_DB_ID_REPORTS; // The destination DB
+const configContent = fs.readFileSync('./js/config.js', 'utf-8');
+let AppConfig = {};
+eval(configContent);
 
-if (!GEMINI_API_KEY || !NOTION_TOKEN || !NOTION_DB_ID_ALL || !NOTION_DB_ID_REPORTS) {
-    console.error("Missing required environment variables.");
-    process.exit(1);
-}
+const GEMINI_API_KEY = AppConfig.geminiKey;
+const NOTION_TOKEN = AppConfig.notionToken;
+const NOTION_DB_ID_ALL = AppConfig.notionDbIdAll; // The source of truth DB
+const NOTION_DB_ID_REPORTS = AppConfig.notionDbIdReports; // The destination DB
+const GEMINI_MODEL = AppConfig.geminiModel;
 
 // 1. Fetch the last 7 days of records from Notion
 async function fetchPastWeekRecords() {
@@ -79,7 +79,7 @@ async function generateWeeklyReport(articles) {
 
     console.log(`Synthesizing weekly report from ${articles.length} records...`);
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
     // Create a dense text block of the week's news
     const articleData = articles.map(a => `Title: ${a.title}\nSummary: ${a.summary}\nSource: ${a.source}\n---\n`).join('\n');

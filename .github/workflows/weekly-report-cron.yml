@@ -22,9 +22,5 @@ jobs:
         run: npm install
 
       - name: Aggregate Week and Generate Synthesis
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
-          NOTION_DB_ID_REPORTS: ${{ secrets.NOTION_DB_ID_REPORTS }}
+
         run: node scripts/weekly-report-isolated.js
