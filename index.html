@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGNAL - Daily Intelligence Feed</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;500;600;700&family=Syne:wght@500;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Boxicons for icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div>
+                    <h1 class="logo">SIGNAL.</h1>
+                    <p class="tagline">Daily Intelligence Feed</p>
+                </div>
+                <button class="mobile-menu-btn" id="mobileMenuBtn"><i class='bx bx-menu'></i></button>
+            </div>
+
+            <div class="sidebar-menu" id="sidebarMenu">
+                <div class="sidebar-section">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label for="purposeInput" class="section-label" style="margin-bottom: 0;">Your Purpose /
+                            Interests</label>
+                        <button id="editPurposeBtn" class="icon-btn" style="padding: 4px;" title="Edit Purpose"><i
+                                class='bx bx-edit' style="font-size: 1.2rem;"></i></button>
+                    </div>
+                    <textarea id="purposeInput" placeholder="e.g., AI tools, startups, EdTech..." maxlength="150"
+                        rows="3" readonly></textarea>
+                    <div class="char-count"><span id="purposeCount">0</span>/150</div>
+                </div>
+
+                <div class="sidebar-section">
+                    <label for="timeframeSelect" class="section-label">Timeframe</label>
+                    <select id="timeframeSelect">
+                        <option value="today" selected>Today (Published Yesterday)</option>
+                        <option value="yesterday" disabled>Yesterday</option>
+                        <option value="7days" disabled>Past 7 Days</option>
+                    </select>
+                </div>
+
+                <button id="fetchNewsBtn" class="primary-btn" disabled>
+                    <i class='bx bx-radar'></i> Get News
+                </button>
+
+                <nav class="sidebar-nav">
+                    <button class="nav-item active" data-view="feed">
+                        <i class='bx bx-layer'></i> Feed
+                    </button>
+                    <button class="nav-item" data-view="saved">
+                        <i class='bx bx-bookmark'></i> Saved
+                    </button>
+                    <button class="nav-item" data-view="reports">
+                        <i class='bx bx-pie-chart-alt-2'></i> Weekly Reports
+                    </button>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <button id="settingsToggleBtn" class="icon-btn" title="Settings" style="font-size: 1.35rem;">
+                        <i class='bx bx-cog'></i> Settings
+                    </button>
+                </div>
+            </div> <!-- End sidebar-menu -->
+        </aside>
+        <div class="menu-backdrop" id="menuBackdrop"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Feed View (Swipeable Stack) -->
+            <div id="view-feed" class="view-section active">
+                <div class="stats-bar">
+                    <div id="statsInfo"></div>
+                </div>
+
+                <div class="card-stack-container" id="cardStack">
+                    <!-- Cards will be injected here dynamically -->
+                    <div class="empty-state">
+                        <div class="glass-icon"><i class='bx bx-radar'></i></div>
+                        <h2>No Intel Found</h2>
+                        <p>Click "Get News" to fetch your daily feed.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Saved View (Swipeable Stack) -->
+            <div id="view-saved" class="view-section" style="display: none;">
+                <div class="stats-bar">
+                    <h2>Saved Intel</h2>
+                    <span id="savedCount">0 items</span>
+                </div>
+                <div class="card-stack-container" id="savedGrid">
+                    <!-- Saved cards stack injected here -->
+                </div>
+            </div>
+
+            <!-- Reports View -->
+            <!-- Reports View -->
+            <div id="view-reports" class="view-section" style="display: none; flex-direction: column;">
+                <div class="header" style="justify-content: space-between; margin-bottom: 24px;">
+                    <div>
+                        <h2>Weekly Insight Report</h2>
+                        <div class="stats" id="reportsCount" style="color: var(--text-secondary); margin-top: 4px;">0
+                            reports</div>
+                    </div>
+                </div>
+
+                <div id="reportsGrid" class="grid-container"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; overflow-y: auto; padding-bottom: 40px;">
+                    <!-- Reports go here -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Slide-over Detail Panel -->
+        <div class="detail-panel" id="detailPanel">
+
+            <div class="detail-content" id="detailContent">
+                <!-- Content toggled between Article Detail and Sentiment -->
+            </div>
+        </div>
+        <div class="panel-backdrop" id="panelBackdrop"></div>
+
+        <!-- Settings Overlay -->
+        <div class="settings-overlay" id="settingsOverlay">
+            <div class="settings-modal">
+                <div class="settings-header">
+                    <h2>Configuration</h2>
+                    <button class="icon-btn" id="closeSettingsBtn"
+                        style="transform: scale(2); transform-origin: center;"><i class='bx bx-x'></i></button>
+                </div>
+                <div class="settings-body">
+                    <div class="form-group">
+                        <label for="geminiKey">Gemini API Key</label>
+                        <input type="password" id="geminiKey" placeholder="AIzaSy...">
+                    </div>
+                    <div class="form-group">
+                        <label for="geminiModel">Gemini Model</label>
+                        <select id="geminiModel">
+                            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                            <option value="gemini-2.0-flash">Gemini 2 Flash</option>
+                            <option value="gemini-2.0-flash-exp">Gemini 2 Flash Exp</option>
+                            <option value="gemini-2.0-flash-lite">Gemini 2 Flash Lite</option>
+                            <option value="gemini-3.0-flash">Gemini 3 Flash</option>
+                            <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite</option>
+                            <option value="gemini-3.0-pro">Gemini 3 Pro</option>
+                            <option value="gemini-3.1-pro">Gemini 3.1 Pro</option>
+                            <option value="gemma-3-1b-it">Gemma 3 1B</option>
+                            <option value="gemma-3-2b-it">Gemma 3 2B</option>
+                            <option value="gemma-3-4b-it">Gemma 3 4B</option>
+                            <option value="gemma-3-12b-it" selected>Gemma 3 12B</option>
+                            <option value="gemma-3-27b-it">Gemma 3 27B</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="notionToken">Notion API Token</label>
+                        <input type="password" id="notionToken" placeholder="secret_...">
+                    </div>
+                    <div class="form-group">
+                        <label for="notionDbIdAll">Notion DB ID (All Records)</label>
+                        <input type="text" id="notionDbIdAll" placeholder="e.g. 1a2b3c4d...">
+                    </div>
+                    <div class="form-group">
+                        <label for="notionDbIdSaved">Notion DB ID (Saved Intel)</label>
+                        <input type="text" id="notionDbIdSaved" placeholder="e.g. 9f8e7d6c...">
+                    </div>
+                    <div class="form-group">
+                        <label for="notionDbIdReports">Notion DB ID (Weekly Reports)</label>
+                        <input type="text" id="notionDbIdReports" placeholder="e.g. 5x4y3z2w...">
+                    </div>
+                    <p class="settings-hint">Warning: Keys are stored exclusively in your browser's localStorage. Do not
+                        use on shared devices.</p>
+                </div>
+                <div class="settings-footer">
+                    <button id="saveSettingsBtn" class="primary-btn">Save Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="settings-overlay" id="deleteConfirmOverlay">
+            <div class="settings-modal" style="max-width: 400px; text-align: center;">
+                <div class="glass-icon" style="color: var(--accent-secondary); margin-bottom: 16px;">
+                    <i class='bx bx-trash' style="font-size: 3rem;"></i>
+                </div>
+                <h3 style="margin-bottom: 16px;">Delete Saved Intel?</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 32px; font-size: 0.95rem; line-height: 1.5;">
+                    Deleting this will remove this card and it can't be restored.
+                </p>
+                <div style="display: flex; gap: 16px;">
+                    <button id="cancelDeleteBtn" class="action-btn" style="flex: 1; margin-bottom: 0;">Cancel</button>
+                    <button id="confirmDeleteBtn" class="primary-btn"
+                        style="flex: 1; margin-bottom: 0; background-color: #ef4444; color: white;">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast">Message</div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/store.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/components/card.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

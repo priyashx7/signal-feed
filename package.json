@@ -1,0 +1,14 @@
+{
+  "name": "signal-automation",
+  "version": "1.0.0",
+  "description": "Daily intelligence feed automation scripts",
+  "type": "module",
+  "scripts": {
+    "daily-sync": "node scripts/daily-sync.js",
+    "cleanup": "node scripts/cleanup.js",
+    "weekly-report": "node scripts/weekly-report.js"
+  },
+  "dependencies": {
+    "rss-parser": "^3.13.0"
+  }
+}

@@ -1,0 +1,30 @@
+name: Weekly Insight Synthesis Report (Sunday 6:30 AM IST)
+on:
+  schedule:
+    # 01:00 UTC translates exactly to 6:30 AM IST
+    # The '0' at the end means it runs only on Sundays
+    - cron: '0 1 * * 0'
+  workflow_dispatch:
+
+jobs:
+  generate-weekly-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Aggregate Week and Generate Synthesis
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
+          NOTION_DB_ID_REPORTS: ${{ secrets.NOTION_DB_ID_REPORTS }}
+        run: node scripts/weekly-report-isolated.js
