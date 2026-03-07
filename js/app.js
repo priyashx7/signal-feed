@@ -96,7 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!validCache) {
             Store.saveCurrentFeed([]); // Hard purge the old cache from local storage
-            if (!settings.notionToken || !settings.notionDbIdAll) {
+            //if (!settings.notionToken || !settings.notionDbIdAll) {
+            if (!settings.notionDbIdAll) {
                 elements.statsInfo.textContent = "Please configure 'Notion DB ID (All Records)' to load cards.";
             } else {
                 elements.statsInfo.textContent = "Ready to discover. Click 'Get News' to begin.";
@@ -112,7 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function syncNotionFeed(settings) {
-        if (!settings.notionToken || !settings.notionDbIdAll) return;
+        //if (!settings.notionToken || !settings.notionDbIdAll) return;
+        if (!settings.notionDbIdAll) return;
 
         try {
             if (currentFeedList.length === 0) elements.statsInfo.textContent = "Checking Notion database for today's intel...";
@@ -340,7 +342,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function handleFetchNews() {
         const settings = Store.getSettings();
 
-        if (!settings.notionToken || !settings.notionDbIdAll) {
+        //if (!settings.notionToken || !settings.notionDbIdAll) {
+        if (!settings.notionDbIdAll) {
             return showToast("Please configure 'Notion DB ID (All Records)' in Settings.");
         }
         if (!settings.geminiKey) {
@@ -787,7 +790,8 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         const settings = Store.getSettings();
-        if (!settings.notionToken || !settings.notionDbIdReports) {
+        //if (!settings.notionToken || !settings.notionDbIdReports) {
+        if (!settings.notionDbIdReports) {
             elements.reportsGrid.innerHTML = `
                 <div class="empty-state" style="grid-column: 1 / -1; margin-top: 40px;">
                     <div class="glass-icon"><i class='bx bx-cog' style="font-size:3rem;"></i></div>
