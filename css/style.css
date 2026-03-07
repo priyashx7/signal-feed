@@ -288,7 +288,7 @@ input:focus:not([readonly]) {
 }
 
 /* Tinder-like Card Stack Area */
-.card-stack-container {
+/*.card-stack-container {
     flex-grow: 1;
     position: relative;
     display: flex;
@@ -297,7 +297,21 @@ input:focus:not([readonly]) {
     perspective: 1000px;
     overflow-x: hidden;
     overflow-y: hidden;
+} */
+
+.card-stack-container {
+    flex-grow: 1;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    perspective: 1000px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+    padding-bottom: 20px;
 }
+
 
 /* Abstract Swipeable Card Profile */
 .swipe-card {
