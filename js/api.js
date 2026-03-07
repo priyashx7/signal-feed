@@ -109,7 +109,8 @@ Return ONLY a valid JSON array of strings. Example: ["AI tools", "startups"]`;
     async fetchSentimentForTopic(topic, apiKey, model = "gemma-3-12b-it") {
         try {
             const targetUrl = encodeURIComponent(`https://www.reddit.com/search.json?q=${encodeURIComponent(topic)}&sort=new&limit=10`);
-            const url = `https://corsproxy.io/?${targetUrl}`;
+            //const url = `https://corsproxy.io/?${targetUrl}`;
+            const url = `https://notion-proxy.priyashnamdeo.workers.dev/?${targetUrl}`;
             const res = await fetch(url, {
                 headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 SignalApp/1.0' }
             });
@@ -237,7 +238,8 @@ Format expected: [{"id": 0, "summary": "...", "detail_about": "...", "detail_imp
 
         // Use standard notion version through a CORS proxy to prevent browser blocks
         const targetUrl = encodeURIComponent('https://api.notion.com/v1/pages');
-        const url = `https://corsproxy.io/?${targetUrl}`;
+        //const url = `https://corsproxy.io/?${targetUrl}`;
+        const url = `https://notion-proxy.priyashnamdeo.workers.dev/?${targetUrl}`;
         const payload = {
             parent: { database_id: dbId },
             properties: {
@@ -269,7 +271,8 @@ Format expected: [{"id": 0, "summary": "...", "detail_about": "...", "detail_imp
 
     async saveReportToNotion(reportData, notionToken, dbId) {
         const targetUrl = encodeURIComponent('https://api.notion.com/v1/pages');
-        const url = `https://corsproxy.io/?${targetUrl}`;
+        //const url = `https://corsproxy.io/?${targetUrl}`;
+        const url = `https://notion-proxy.priyashnamdeo.workers.dev/?${targetUrl}`;
 
         const payload = {
             parent: { database_id: dbId },
@@ -306,7 +309,8 @@ Format expected: [{"id": 0, "summary": "...", "detail_about": "...", "detail_imp
 
     async archiveFromNotion(article, notionToken, dbId) {
         // Step 1: Query the Saved database to find the specific page ID for this article
-        const queryUrl = `https://corsproxy.io/?${encodeURIComponent(`https://api.notion.com/v1/databases/${dbId}/query`)}`;
+        //const queryUrl = `https://corsproxy.io/?${encodeURIComponent(`https://api.notion.com/v1/databases/${dbId}/query`)}`;
+        const queryUrl = `https://notion-proxy.priyashnamdeo.workers.dev/?${encodeURIComponent(`https://api.notion.com/v1/databases/${dbId}/query`)}`;
 
         const queryRes = await fetch(queryUrl, {
             method: 'POST',
@@ -332,7 +336,8 @@ Format expected: [{"id": 0, "summary": "...", "detail_about": "...", "detail_imp
 
         // Step 2: Archive (Delete) the found page
         const pageId = data.results[0].id;
-        const archiveUrl = `https://corsproxy.io/?${encodeURIComponent(`https://api.notion.com/v1/pages/${pageId}`)}`;
+        //const archiveUrl = `https://corsproxy.io/?${encodeURIComponent(`https://api.notion.com/v1/pages/${pageId}`)}`;
+        const archiveUrl = `https://notion-proxy.priyashnamdeo.workers.dev/?${encodeURIComponent(`https://api.notion.com/v1/pages/${pageId}`)}`;
 
         const archiveRes = await fetch(archiveUrl, {
             method: 'PATCH',
@@ -351,7 +356,8 @@ Format expected: [{"id": 0, "summary": "...", "detail_about": "...", "detail_imp
 
     async fetchReportsFromNotion(notionToken, dbId) {
         const targetUrl = encodeURIComponent(`https://api.notion.com/v1/databases/${dbId}/query`);
-        const url = `https://corsproxy.io/?${targetUrl}`;
+        //const url = `https://corsproxy.io/?${targetUrl}`;
+        const url = `https://notion-proxy.priyashnamdeo.workers.dev/?${targetUrl}`;
 
         const res = await fetch(url, {
             method: 'POST',
@@ -403,7 +409,8 @@ Format expected: [{"id": 0, "summary": "...", "detail_about": "...", "detail_imp
         if (!notionToken || !dbId) throw new Error("Missing Notion credentials to save.");
 
         const targetUrl = encodeURIComponent(`https://api.notion.com/v1/pages`);
-        const url = `https://corsproxy.io/?${targetUrl}`;
+        //const url = `https://corsproxy.io/?${targetUrl}`;
+        const url = `https://notion-proxy.priyashnamdeo.workers.dev/?${targetUrl}`;
 
         // Use local timezone to generate exactly YYYY-MM-DD to avoid UTC rollover causing "Yesterday" bugs
         const apiDateString = new Date().toLocaleDateString('en-CA');
@@ -443,7 +450,8 @@ Format expected: [{"id": 0, "summary": "...", "detail_about": "...", "detail_imp
     async fetchFromNotionAllRecords(notionToken, dbId) {
         // Use a CORS proxy to prevent the browser from blocking the Notion API request
         const targetUrl = encodeURIComponent(`https://api.notion.com/v1/databases/${dbId}/query`);
-        const url = `https://corsproxy.io/?${targetUrl}`;
+        //const url = `https://corsproxy.io/?${targetUrl}`;
+        const url = `https://notion-proxy.priyashnamdeo.workers.dev/?${targetUrl}`;
 
         const res = await fetch(url, {
             method: 'POST',
