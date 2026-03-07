@@ -406,7 +406,8 @@ Format expected: [{"id": 0, "summary": "...", "detail_about": "...", "detail_imp
     }
 
     async saveToNotionAllRecords(article, notionToken, dbId) {
-        if (!notionToken || !dbId) throw new Error("Missing Notion credentials to save.");
+        //if (!notionToken || !dbId) throw new Error("Missing Notion credentials to save.");
+        if (!dbId) throw new Error("Missing Notion credentials to save.");
 
         const targetUrl = encodeURIComponent(`https://api.notion.com/v1/pages`);
         //const url = `https://corsproxy.io/?${targetUrl}`;
