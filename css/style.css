@@ -318,8 +318,8 @@ input:focus:not([readonly]) {
     position: absolute;
     width: 100%;
     max-width: 450px;
-    height: 75vh;
-    max-height: 650px;
+    height: 63vh;
+    max-height: 552px;
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 24px;
