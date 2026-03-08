@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
+//document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('configReady', () => {
     // UI Elements
     const elements = {
         purposeInput: document.getElementById('purposeInput'),

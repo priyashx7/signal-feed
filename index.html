@@ -169,6 +169,7 @@
             .then(cfg => {
                 AppConfig.geminiKey = cfg.geminiKey;
                 AppConfig.notionToken = cfg.notionToken;
+                document.dispatchEvent(new Event('configReady'));
             });
     </script>
     <script src="js/store.js"></script>
