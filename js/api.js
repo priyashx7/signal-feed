@@ -109,8 +109,10 @@ Return ONLY a valid JSON array of strings. Example: ["AI tools", "startups"]`;
     async fetchSentimentForTopic(topic, apiKey, model = "gemma-3-12b-it") {
         try {
             const targetUrl = encodeURIComponent(`https://www.reddit.com/search.json?q=${encodeURIComponent(topic)}&sort=new&limit=10`);
+            const url = `https://corsproxy.io/?${targetUrl}`;
+            //const targetUrl = encodeURIComponent(`https://www.reddit.com/search.json?q=${encodeURIComponent(topic)}&sort=new&limit=10`);
             //const url = `https://corsproxy.io/?${targetUrl}`;
-            const url = `https://notion-proxy.priyashnamdeo.workers.dev/?url=${targetUrl}`;
+            //const url = `https://notion-proxy.priyashnamdeo.workers.dev/?url=${targetUrl}`;
             const res = await fetch(url, {
                 headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 SignalApp/1.0' }
             });
