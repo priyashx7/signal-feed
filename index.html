@@ -157,13 +157,19 @@
     <!--<script src="js/config.js"></script>-->
     <script>
         const AppConfig = {
-            geminiKey: 'AIzaSyBisdIaSgN4sjRBzQAgGeh7XEr5Chbhmk0',
+            geminiKey: '',
             geminiModel: 'gemini-2.5-flash',
             notionToken: '',
             notionDbIdAll: '31853bc5fb4f806985aeddc3992b260e',
             notionDbIdSaved: '31853bc5fb4f809fa4e8c38498805ca8',
             notionDbIdReports: '31953bc5fb4f8062a4efc3ad3d99e73c'
         };
+        fetch('https://notion-proxy.priyashnamdeo.workers.dev/config')
+            .then(r => r.json())
+            .then(cfg => {
+                AppConfig.geminiKey = cfg.geminiKey;
+                AppConfig.notionToken = cfg.notionToken;
+            });
     </script>
     <script src="js/store.js"></script>
     <script src="js/api.js"></script>
