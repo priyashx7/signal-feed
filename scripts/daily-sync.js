@@ -50,6 +50,28 @@ async function fetchGoogleNews(topic) {
     } catch (e) { return []; }
 }
 
+async function summarizeArticles(articles) {
+    const articlesJson = JSON.stringify(articles.map((a, i) => ({ id: i, title: a.title, source: a.source })));
+
+    const systemInstruction = `You are an elite daily intelligence AI.
+For each article, generate:
+1. A crisp 30-50 word summary.
+2. "detail_about": Write about the news itself in detail.
+3. "detail_impact": Write ONLY about how it could impact or bring change to the respective field or the world.
+Return ONLY a valid JSON array: [{"id": 0, "summary": "...", "detail_about": "...", "detail_impact": "..."}]`;
+
+    const prompt = `Process these articles:\n${articlesJson}`;
+
+    try {
+        const resultText = await callGemini(prompt, systemInstruction);
+        const cleaned = resultText.replace(/```json/g, '').replace(/```/g, '').trim();
+        return JSON.parse(cleaned);
+    } catch (e) {
+        console.error("Summarization failed:", e);
+        return articles.map((_, i) => ({ id: i, summary: "Summary unavailable.", detail_about: "", detail_impact: "" }));
+    }
+}
+
 async function saveToNotion(article) {
     const url = 'https://api.notion.com/v1/pages';
     const payload = {
@@ -58,9 +80,9 @@ async function saveToNotion(article) {
             Title: { title: [{ text: { content: article.title.substring(0, 2000) } }] },
             Source: { select: { name: article.source || 'Unknown' } },
             URL: { url: article.url || null },
-            Summary: { rich_text: [{ text: { content: article.summary.substring(0, 2000) } }] },
-            Description: { rich_text: [{ text: { content: '' } }] },
-            Impact: { rich_text: [{ text: { content: '' } }] },
+            Summary: { rich_text: [{ text: { content: (article.summary || '').substring(0, 2000) } }] },
+            Description: { rich_text: [{ text: { content: (article.detailAbout || '').substring(0, 2000) } }] },
+            Impact: { rich_text: [{ text: { content: (article.detailImpact || '').substring(0, 2000) } }] },
             "Reddit sentiment": { rich_text: [{ text: { content: '' } }] },
             Date: { date: { start: new Date().toLocaleDateString('en-CA') } }
         }
@@ -85,27 +107,20 @@ async function run() {
         console.log(`Processing topic: ${topic}`);
         const hn = await fetchHN(topic);
         const gn = await fetchGoogleNews(topic);
-        const articles = [...hn, ...gn].filter((v, i, a) => a.findIndex(t => (t.title === v.title)) === i);
+        const articles = [...hn, ...gn].filter((v, i, a) => a.findIndex(t => t.title === v.title) === i);
 
         if (articles.length === 0) continue;
 
-        const articlesJson = JSON.stringify(articles.map((a, i) => ({ id: i, title: a.title, source: a.source })));
-        const prompt = `Process these articles and provide a 30-50 word summary for each:\n${articlesJson}`;
-        const sys = `Return ONLY a valid JSON array of objects format: [{"id": 0, "summary": "..."}]`;
+        const summaries = await summarizeArticles(articles);
 
-        try {
-            const aiRes = await callGemini(prompt, sys);
-            const summaries = JSON.parse(aiRes.replace(/```json/g, '').replace(/```/g, '').trim());
-
-            for (let i = 0; i < articles.length; i++) {
-                const s = summaries.find(x => x.id === i);
-                articles[i].summary = s ? s.summary : articles[i].title;
-                await saveToNotion(articles[i]);
-            }
-            console.log(`Saved ${articles.length} items for ${topic}`);
-        } catch (e) {
-            console.error("Summarization error for topic", topic, e);
+        for (let i = 0; i < articles.length; i++) {
+            const s = summaries.find(x => x.id === i);
+            articles[i].summary = s ? s.summary : articles[i].title;
+            articles[i].detailAbout = s ? s.detail_about : '';
+            articles[i].detailImpact = s ? s.detail_impact : '';
+            await saveToNotion(articles[i]);
         }
+        console.log(`Saved ${articles.length} items for ${topic}`);
     }
 }
 
