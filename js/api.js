@@ -464,7 +464,19 @@ Format expected: [{"id": 0, "summary": "...", "detail_about": "...", "detail_imp
                 'Notion-Version': '2022-06-28'
             },
             body: JSON.stringify({
-                page_size: 20 // Adjust as needed
+                page_size: 100,
+                filter: {
+                    property: "Date",
+                    date: {
+                        equals: new Date().toLocaleDateString('en-CA')
+                    }
+                },
+                sorts: [
+                    {
+                        property: "Date",
+                        direction: "descending"
+                    }
+                ]
             })
         });
 
