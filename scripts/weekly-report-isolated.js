@@ -143,7 +143,11 @@ async function saveReportToNotion(reportObj) {
             body: JSON.stringify(payload)
         });
 
-        if (!res.ok) throw new Error(await res.text());
+        if (!res.ok) {
+            const errText = await res.text();
+            console.error("Notion save FAILED:", errText);
+            return;
+        }
         console.log("Weekly Report successfully saved to Notion!");
     } catch (e) {
         console.error("Failed to save report to Notion:", e);
