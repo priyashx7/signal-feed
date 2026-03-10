@@ -56,11 +56,13 @@ async function saveToNotion(article) {
         parent: { database_id: NOTION_DB_ID },
         properties: {
             Title: { title: [{ text: { content: article.title.substring(0, 2000) } }] },
-            Topic: { rich_text: [{ text: { content: article.topic } }] },
-            Source: { rich_text: [{ text: { content: article.source } }] },
-            URL: { url: article.url },
+            Source: { select: { name: article.source || 'Unknown' } },
+            URL: { url: article.url || null },
             Summary: { rich_text: [{ text: { content: article.summary.substring(0, 2000) } }] },
-            Type: { select: { name: "Daily Feed" } }
+            Description: { rich_text: [{ text: { content: '' } }] },
+            Impact: { rich_text: [{ text: { content: '' } }] },
+            "Reddit sentiment": { rich_text: [{ text: { content: '' } }] },
+            Date: { date: { start: new Date().toLocaleDateString('en-CA') } }
         }
     };
     const res = await fetch(url, {
