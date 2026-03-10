@@ -127,7 +127,8 @@ async function saveReportToNotion(reportObj) {
             "Date": { date: { start: apiDateString } },
             "Summary": { rich_text: [{ text: { content: reportObj.summary.substring(0, 2000) } }] },
             "Description": { rich_text: [{ text: { content: reportObj.description.substring(0, 2000) } }] },
-            "Reddit Sentiment": { rich_text: [{ text: { content: reportObj.reddit_sentiment.substring(0, 2000) } }] }
+            "Impact": { rich_text: [{ text: { content: (reportObj.impact || '').substring(0, 2000) } }] },
+            "Reddit sentiment": { rich_text: [{ text: { content: reportObj.reddit_sentiment.substring(0, 2000) } }] }
         }
     };
 
