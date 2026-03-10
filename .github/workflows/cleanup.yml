@@ -20,5 +20,8 @@ jobs:
         run: npm install
 
       - name: Run Cleanup
-
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
+          NOTION_DB_ID_REPORTS: ${{ secrets.NOTION_DB_ID_REPORTS }}
         run: npm run cleanup
