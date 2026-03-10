@@ -15,7 +15,7 @@ class CardComponent {
         card.innerHTML = `
             <div class="card-topic">
                 ${article.source} &bull; ${formattedDate}
-            </div>
+            </div>got these error
             <h2 class="card-title">${article.title}</h2>
             <div class="card-summary">${article.summary}</div>
             <div class="card-actions">

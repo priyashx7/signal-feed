@@ -21,6 +21,8 @@ jobs:
         run: npm install
 
       - name: Fetch and Parse Daily News
-
-        # This executes the same backend function the Get News button uses
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
         run: npm run daily-sync

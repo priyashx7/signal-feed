@@ -1,12 +1,6 @@
-import fs from 'fs';
-
-const configContent = fs.readFileSync('./js/config.js', 'utf-8');
-let AppConfig = {};
-eval(configContent);
-
-const NOTION_TOKEN = AppConfig.notionToken;
-const NOTION_DB_ID = AppConfig.notionDbIdAll;
-const NOTION_DB_ID_REPORTS = AppConfig.notionDbIdReports;
+const NOTION_TOKEN = process.env.NOTION_TOKEN;
+const NOTION_DB_ID = process.env.NOTION_DB_ID;
+const NOTION_DB_ID_REPORTS = process.env.NOTION_DB_ID_REPORTS;
 
 async function runCleanup(dbId, daysAgo, dbName) {
     if (!dbId) {
@@ -17,13 +11,12 @@ async function runCleanup(dbId, daysAgo, dbName) {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - daysAgo);
 
-    // Query items in the DB created before cutoffDate
     const url = `https://api.notion.com/v1/databases/${dbId}/query`;
     const payload = {
         filter: {
             property: "Date",
             date: {
-                before: cutoffDate.toISOString().split('T')[0] // Format as YYYY-MM-DD for Notion Date property
+                before: cutoffDate.toISOString().split('T')[0]
             }
         }
     };
@@ -47,7 +40,6 @@ async function runCleanup(dbId, daysAgo, dbName) {
         console.log(`Found ${data.results.length} pages to delete in ${dbName}.`);
 
         for (const page of data.results) {
-            // Archive page (soft delete)
             await fetch(`https://api.notion.com/v1/pages/${page.id}`, {
                 method: 'PATCH',
                 headers: {
@@ -66,10 +58,7 @@ async function runCleanup(dbId, daysAgo, dbName) {
 }
 
 async function start() {
-    // Run cleanup for All Records database (10 Days)
     await runCleanup(NOTION_DB_ID, 10, "All Records");
-
-    // Run cleanup for Weekly Reports database (20 Days)
     await runCleanup(NOTION_DB_ID_REPORTS, 20, "Weekly Reports");
 }
 

@@ -1,21 +1,13 @@
-import fs from 'fs';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const NOTION_TOKEN = process.env.NOTION_TOKEN;
+const NOTION_DB_ID_ALL = process.env.NOTION_DB_ID;
+const NOTION_DB_ID_REPORTS = process.env.NOTION_DB_ID_REPORTS;
+const GEMINI_MODEL = 'gemini-2.5-flash';
 
-const configContent = fs.readFileSync('./js/config.js', 'utf-8');
-let AppConfig = {};
-eval(configContent);
-
-const GEMINI_API_KEY = AppConfig.geminiKey;
-const NOTION_TOKEN = AppConfig.notionToken;
-const NOTION_DB_ID_ALL = AppConfig.notionDbIdAll; // The source of truth DB
-const NOTION_DB_ID_REPORTS = AppConfig.notionDbIdReports; // The destination DB
-const GEMINI_MODEL = AppConfig.geminiModel;
-
-// 1. Fetch the last 7 days of records from Notion
 async function fetchPastWeekRecords() {
     console.log("Fetching the last 7 days of intelligence from Notion...");
     const url = `https://api.notion.com/v1/databases/${NOTION_DB_ID_ALL}/query`;
 
-    // Calculate dates
     const today = new Date();
     const sevenDaysAgo = new Date(today);
     sevenDaysAgo.setDate(today.getDate() - 7);
@@ -35,7 +27,7 @@ async function fetchPastWeekRecords() {
                         { property: "Date", date: { on_or_before: today.toISOString().split('T')[0] } }
                     ]
                 },
-                page_size: 100 // Grab up to 100 articles from the week
+                page_size: 100
             })
         });
 
@@ -70,7 +62,6 @@ async function fetchPastWeekRecords() {
     }
 }
 
-// 2. Ask Gemini to summarize the week
 async function generateWeeklyReport(articles) {
     if (articles.length === 0) {
         console.log("No articles found in the past 7 days. AI synthesis aborted.");
@@ -81,7 +72,6 @@ async function generateWeeklyReport(articles) {
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
-    // Create a dense text block of the week's news
     const articleData = articles.map(a => `Title: ${a.title}\nSummary: ${a.summary}\nSource: ${a.source}\n---\n`).join('\n');
 
     const prompt = `You are an elite intelligence analyst. 
@@ -123,7 +113,6 @@ ${articleData}`;
     }
 }
 
-// 3. Save directly to the Reports database
 async function saveReportToNotion(reportObj) {
     if (!reportObj) return;
 
@@ -160,7 +149,6 @@ async function saveReportToNotion(reportObj) {
     }
 }
 
-// Execute Sequence
 async function run() {
     try {
         const articles = await fetchPastWeekRecords();
